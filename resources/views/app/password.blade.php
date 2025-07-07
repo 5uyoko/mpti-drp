@@ -79,7 +79,7 @@
 
           <div class="form-group">
             <div class="col-md-8 col-md-offset-4">
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary" style="background-color:#007bff; border-color:#007bff;">
                 Ganti Password
               </button>
             </div>

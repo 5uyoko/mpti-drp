@@ -33,8 +33,8 @@
 <div class="nav-header text-center" style="background: #000 !important; background-image: none !important; font-family: 'Poppins', sans-serif; display: flex; align-items: center; justify-content: center; height: 70px;">
     <div class="brand-logo" style="display: flex; align-items: center;">
         <a href="{{ url('/home') }}" style="display: flex; align-items: center;">
-            <img src="{{ asset('gambar/sistem/logo1.png') }}" alt="Logo" style="height: 50px; width: auto; display: block;">
-            <span class="text-white ml-2"><b>PT. RPS</b></span>
+            <img src="{{ asset('gambar/sistem/logo2.png') }}" alt="Logo" style="height: 50px; width: auto; display: block;">
+            <span class="brand-title text-white ml-2"><b>PT. DRP</b></span>
         </a>
     </div>
 </div>
@@ -292,6 +292,10 @@
     $('.datepicker2').datepicker({
         autoclose: true,
         format: 'yyyy/mm/dd',
+    });
+
+    $('.hamburger').on('click', function () {
+        $('#main-wrapper').toggleClass('mini-sidebar');
     });
 
 </script>

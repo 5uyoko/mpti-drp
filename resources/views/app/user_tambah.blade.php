@@ -23,7 +23,7 @@
     <div class="card">
 
       <div class="card-header pt-4">
-        <a href="{{ route('user') }}" class="btn btn-primary float-right"><i class="fa fa-arrow-left"></i> &nbsp KEMBALI</a>
+        <a href="{{ route('user') }}" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;"><i class="fa fa-arrow-left"></i> &nbsp KEMBALI</a>
         <h4>Tambah Pengguna Sistem</h4>
 
       </div>
@@ -108,7 +108,7 @@
 
               
               <div class="form-group">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-primary" style="background-color:#007bff; border-color:#007bff;">Simpan</button>
               </div>
             </form>
           </div>

@@ -117,7 +117,7 @@
                     <select name="ship_id" class="form-control" required>
                         <option value="">-- Pilih Kapal --</option>
                         @foreach ($ships as $ship)
-                            <option value="{{ $ship->ship_id }}">{{ $ship->shipname }}</option>
+                            <option value="{{ $ship->ship_id }}">{{ $ship->ship_id . ' - ' . $ship->shipname }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -139,7 +139,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label>Jumlah Muatan (ton)</label>
-                    <input type="number" name="load_amount" class="form-control" placeholder="Contoh: 10" required>
+                    <input type="number" name="load_amount" class="form-control" placeholder="Contoh: 10" required min="0">
                 </div>
                 <div class="col-md-6 mb-3">
                 <label>Rute</label>
@@ -164,7 +164,7 @@
             </div>
                 <div class="col-md-6 mb-4">
                     <label>Harga per Ton (Rp)</label>
-                    <input type="number" name="rental_price" class="form-control" placeholder="Contoh: 1000000" required>
+                    <input type="number" name="rental_price" class="form-control" placeholder="Contoh: 1000000" required min="0">
                 </div>
             </div>
 
@@ -180,7 +180,7 @@
                                 <input type="text" name="spending_name[]" class="form-control" placeholder="Nama Pengeluaran" required>
                             </div>
                             <div class="col-md-4">
-                                <input type="number" name="spending_amount[]" class="form-control spending-amount" placeholder="Jumlah (Rp)" required>
+                                <input type="number" name="spending_amount[]" class="form-control spending-amount" placeholder="Jumlah (Rp)" required min="0">
                             </div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-danger btn-block" onclick="removeSpending(this)">Hapus</button>

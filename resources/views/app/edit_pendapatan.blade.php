@@ -20,7 +20,7 @@
             @method('PUT')
 
             {{-- Hidden for reference --}}
-            <input type="hidden" name="id" value="{{ $ship->id }}">
+            <input type="hidden" name="ship_id" value="{{ $ship->ship_id }}">
             <input type="hidden" name="load_id" value="{{ $load->load_id }}">
 
             <div class="form-group">
@@ -36,7 +36,7 @@
             <div class="form-group">
                 <label>Jenis Muatan</label>
                 <input type="text" name="load_name" class="form-control" value="{{ $loadCategory->load_name }}" required>
-                <input type="hidden" name="id" value="{{ $loadCategory->id }}">
+                <input type="hidden" name="load_category_id" value="{{ $loadCategory->load_category_id }}">
             </div>
 
             <div class="form-group">

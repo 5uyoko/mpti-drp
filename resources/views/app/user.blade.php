@@ -22,7 +22,7 @@
     <div class="card">
 
       <div class="card-header pt-4">
-        <a href="{{ route('user.tambah') }}" class="btn btn-primary float-right"><i class="fa fa-plus"></i> &nbsp TAMBAH PENGGUNA</a>
+        <a href="{{ route('user.tambah') }}" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;"><i class="fa fa-plus"></i> &nbsp TAMBAH PENGGUNA</a>
         <h4>Data Pengguna Sistem</h4>
 
       </div>
@@ -57,7 +57,7 @@
 
                   {{ $u->name }}
                   @if(Auth::id() == $u->id)
-                  <span class="badge badge-primary">Saya</span>
+                  <span class="badge" style="background-color:#007bff; color:#fff;">Saya</span>
                   @endif
                 </td>
                 <td class="text-center">{{ $u->email }}</td>

@@ -16,7 +16,6 @@
 
   <div class="container-fluid">
     <div class="card">
-      <a href="{{ route('input_laporan') }}" class="btn btn-add">+ Tambah Data</a>
       <div class="card-header pt-4">
         <h4 class="card-title">Filter Laporan</h4>
       </div>
@@ -41,8 +40,8 @@
               <input type="text" name="load_name" class="form-control" value="{{ $filters['load_name'] ?? '' }}">
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Terapkan Filter</button>
-          <a href="{{ route('laporan') }}" class="btn btn-secondary">Reset</a>
+          <button type="submit" class="btn btn-primary" style="background-color:#007bff; border-color:#007bff;">Terapkan Filter</button>
+          <a href="{{ route('laporan') }}" class="btn btn-danger" style="background-color:#dc3545; border-color:#dc3545; color:#fff;">Reset</a>
         </form>
       </div>
 
@@ -75,16 +74,7 @@
                   <td>Rp {{ number_format($item->total_income, 0, ',', '.') }}</td>
                   <td>Rp {{ number_format($item->total_spending, 0, ',', '.') }}</td>
                   <td class="text-center">
-                    <a href="{{ route('laporan.update', $item->report_id) }}" class="btn btn-sm btn-warning" title="Edit">
-                      <i class="fa fa-edit"></i>
-                    </a>
-                    <form action="{{ route('laporan.destroy', $item->report_id) }}" method="POST" style="display: inline;">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-sm btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus laporan ini?')">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </form>
+
                   </td>
                 </tr>
               @empty

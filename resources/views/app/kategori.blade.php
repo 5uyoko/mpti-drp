@@ -19,161 +19,16 @@
 
   <div class="container-fluid">
 
+   
     <div class="card">
-
       <div class="card-header pt-4">
-        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
-          <i class="fa fa-plus"></i> &nbsp TAMBAH KATEGORI
-        </button>
-        <h4>Data Kategori</h4>
-
-      </div>
-      <div class="card-body pt-0">
-
-        <!-- Modal -->
-        <form action="{{ route('kategori.aksi') }}" method="post">
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Tambah Kategori</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-
-                  @csrf
-                  <div class="form-group">
-                    <label>Nama Kategori</label>
-                    <input type="text" name="nama" required="required" class="form-control" placeholder="Nama Kategori ..">
-                  </div>
-
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close m-r-5 f-s-12"></i> Tutup</button>
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-
-
-        <div class="table-responsive">
-
-
-          <table class="table table-bordered" id="table-datatable">
-            <thead>
-              <tr>
-                <th width="1%">NO</th>
-                <th>NAMA KATEGORI</th>
-                <th class="text-center" width="10%">OPSI</th>
-              </tr>
-            </thead>
-            <tbody>
-              @php
-              $no = 1;
-              @endphp
-              @foreach($kategori as $k)
-              <tr>
-                <td class="text-center">{{ $no++ }}</td>
-                <td>{{ $k->kategori }}</td>
-                <td>    
-
-                  @if($k->id != 1)
-                  <div class="text-center">
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit_kategori_{{ $k->id }}">
-                      <i class="fa fa-cog"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapus_kategori_{{ $k->id }}">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </div>
-                  @endif
-
-                  <form action="{{ route('kategori.update',['id' => $k->id]) }}" method="post">
-                    <div class="modal fade" id="edit_kategori_{{$k->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Edit Kategori</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-
-                            @csrf
-                            {{ method_field('PUT') }}
-
-                            <div class="form-group" style="width:100%">
-                              <label>Nama Kategori</label>
-                              <input type="hidden" name="id" value="{{ $k->id }}">
-                              <input type="text" name="nama" required="required" class="form-control" placeholder="Nama Kategori .." value="{{ $k->kategori }}" style="width:100%">
-                            </div>
-
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close m-r-5 f-s-12"></i> Tutup</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-
-                  <!-- modal hapus -->
-                  <form method="POST" action="{{ route('kategori.delete',['id' => $k->id]) }}">
-                    <div class="modal fade" id="hapus_kategori_{{$k->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Peringatan!</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-
-                            <p>Yakin ingin menghapus data ini ?</p>
-
-                            @csrf
-                            {{ method_field('DELETE') }}
-
-
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close m-r-5 f-s-12"></i> Batal</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane m-r-5"></i> Ya, Hapus</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-
-
-                </td>
-              </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Card Tambah Data Kapal -->
-    <div class="card mt-4">
-      <div class="card-header pt-4">
-        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalTambahKapal">
+        <button type="button" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;" data-toggle="modal" data-target="#modalTambahKapal">
           <i class="fa fa-plus"></i> &nbsp TAMBAH KAPAL
         </button>
         <h4>Data Kapal</h4>
       </div>
       <div class="card-body pt-0">
-        <!-- Modal Tambah Kapal -->
+
         <form action="{{ route('kapal.aksi') }}" method="post">
           <div class="modal fade" id="modalTambahKapal" tabindex="-1" role="dialog" aria-labelledby="modalTambahKapalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -193,7 +48,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close m-r-5 f-s-12"></i> Tutup</button>
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
+                  <button type="submit" class="btn btn-primary" style="background-color:#007bff; border-color:#007bff;"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
                 </div>
               </div>
             </div>
@@ -223,7 +78,7 @@
                       <i class="fa fa-trash"></i>
                     </button>
                   </div>
-                  <!-- Modal Edit Kapal -->
+          
                   <form action="{{ route('kapal.update', ['id' => $ship->ship_id]) }}" method="post">
                     <div class="modal fade" id="edit_kapal_{{ $ship->ship_id }}" tabindex="-1" role="dialog" aria-labelledby="editKapalLabel_{{ $ship->ship_id }}" aria-hidden="true">
                       <div class="modal-dialog" role="document">
@@ -251,7 +106,7 @@
                       </div>
                     </div>
                   </form>
-                  <!-- Modal Hapus Kapal -->
+         
                   <form method="POST" action="{{ route('kapal.delete', ['id' => $ship->ship_id]) }}">
                     <div class="modal fade" id="hapus_kapal_{{ $ship->ship_id }}" tabindex="-1" role="dialog" aria-labelledby="hapusKapalLabel_{{ $ship->ship_id }}" aria-hidden="true">
                       <div class="modal-dialog" role="document">
@@ -284,16 +139,16 @@
       </div>
     </div>
 
-    <!-- Card Tambah Data Jenis Muatan -->
+
     <div class="card mt-4">
       <div class="card-header pt-4">
-        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalTambahMuatan">
+        <button type="button" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;" data-toggle="modal" data-target="#modalTambahMuatan">
           <i class="fa fa-plus"></i> &nbsp TAMBAH JENIS MUATAN
         </button>
         <h4>Data Jenis Muatan</h4>
       </div>
       <div class="card-body pt-0">
-        <!-- Modal Tambah Muatan -->
+
         <form action="{{ route('muatan.aksi') }}" method="post">
           <div class="modal fade" id="modalTambahMuatan" tabindex="-1" role="dialog" aria-labelledby="modalTambahMuatanLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -313,7 +168,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close m-r-5 f-s-12"></i> Tutup</button>
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
+                  <button type="submit" class="btn btn-primary" style="background-color:#007bff; border-color:#007bff;"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
                 </div>
               </div>
             </div>
@@ -343,7 +198,7 @@
                       <i class="fa fa-trash"></i>
                     </button>
                   </div>
-                  <!-- Modal Edit Muatan -->
+          
                   <form action="{{ route('muatan.update', ['id' => $muatan->load_category_id]) }}" method="post">
                     <div class="modal fade" id="edit_muatan_{{ $muatan->load_category_id }}" tabindex="-1" role="dialog" aria-labelledby="editMuatanLabel_{{ $muatan->load_category_id }}" aria-hidden="true">
                       <div class="modal-dialog" role="document">
@@ -371,7 +226,7 @@
                       </div>
                     </div>
                   </form>
-                  <!-- Modal Hapus Muatan -->
+              
                   <form method="POST" action="{{ route('muatan.delete', ['id' => $muatan->load_category_id]) }}">
                     <div class="modal fade" id="hapus_muatan_{{ $muatan->load_category_id }}" tabindex="-1" role="dialog" aria-labelledby="hapusMuatanLabel_{{ $muatan->load_category_id }}" aria-hidden="true">
                       <div class="modal-dialog" role="document">
@@ -405,16 +260,15 @@
     </div>
 
 
-    <!-- Card Tambah Data Rute -->
     <div class="card mt-4">
       <div class="card-header pt-4">
-        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalTambahRute">
+        <button type="button" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;" data-toggle="modal" data-target="#modalTambahRute">
           <i class="fa fa-plus"></i> &nbsp TAMBAH RUTE
         </button>
         <h4>Data Rute</h4>
       </div>
       <div class="card-body pt-0">
-        <!-- Modal Tambah Rute -->
+     
         <form action="{{ route('rute.aksi') }}" method="post">
           <div class="modal fade" id="modalTambahRute" tabindex="-1" role="dialog" aria-labelledby="modalTambahRuteLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -434,7 +288,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close m-r-5 f-s-12"></i> Tutup</button>
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
+                  <button type="submit" class="btn btn-primary" style="background-color:#007bff; border-color:#007bff;"><i class="fa fa-paper-plane m-r-5"></i> Simpan</button>
                 </div>
               </div>
             </div>
@@ -464,7 +318,7 @@
                       <i class="fa fa-trash"></i>
                     </button>
                   </div>
-                  <!-- Modal Edit Rute -->
+         
                   <form action="{{ route('rute.update', ['id' => $rute->city_id]) }}" method="post">
                     <div class="modal fade" id="edit_rute_{{ $rute->city_id }}" tabindex="-1" role="dialog" aria-labelledby="editRuteLabel_{{ $rute->city_id }}" aria-hidden="true">
                       <div class="modal-dialog" role="document">
@@ -492,7 +346,7 @@
                       </div>
                     </div>
                   </form>
-                  <!-- Modal Hapus Rute -->
+    
                   <form method="POST" action="{{ route('rute.delete', ['id' => $rute->city_id]) }}">
                     <div class="modal fade" id="hapus_rute_{{ $rute->city_id }}" tabindex="-1" role="dialog" aria-labelledby="hapusRuteLabel_{{ $rute->city_id }}" aria-hidden="true">
                       <div class="modal-dialog" role="document">

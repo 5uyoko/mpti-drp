@@ -124,6 +124,10 @@ class HomeController extends Controller
     public function kategori_aksi(Request $req)
     {
         $nama = $req->input('nama');
+        // Cek duplikat kategori
+        if (Kategori::where('kategori', $nama)->exists()) {
+            return redirect('kategori')->with('error', 'Kategori sudah ada!');
+        }
         Kategori::create(['kategori' => $nama]);
         return redirect('kategori')->with('success','Kategori telah disimpan');
     }
@@ -562,8 +566,6 @@ class HomeController extends Controller
                 'cities_to.city_name as kota_tujuan'
             );
     
-    
-
         if ($request->filled('search')) {
             $query->where('ships.shipname', 'like', '%' . $request->search . '%');
         }
@@ -594,7 +596,7 @@ class HomeController extends Controller
     public function input_pendapatan(Request $request)
     {
         $request->validate([
-            'shipname'             => 'required|string',
+            'ship_id'              => 'required|integer|exists:ships,ship_id',
             'date'                 => 'required|date',
             'city_from_id'         => 'required|integer|exists:cities,city_id',
             'city_to_id'           => 'required|integer|exists:cities,city_id',
@@ -607,14 +609,10 @@ class HomeController extends Controller
 
         DB::beginTransaction();
         try {
-            // 1. Simpan kapal
-            $ship_id = DB::table('ships')->insertGetId([
-                'shipname' => $request->shipname,
-                'skipper'  => '-', // tidak digunakan
-                'capacity' => 0
-            ]);
+            // 1. Ambil ship_id dari input
+            $ship_id = $request->ship_id;
 
-            // 2. Simpan muatan (dengan load_category_id)
+            // 2. Simpan muatan
             $load_id = DB::table('loads')->insertGetId([
                 'load_category_id' => $request->load_category_id,
                 'load_amount'      => $request->load_amount,
@@ -647,6 +645,17 @@ class HomeController extends Controller
                 ]);
             }
 
+            // 6. Simpan ke report
+            $date = new \DateTime($request->date); // dari request langsung
+            DB::table('report')->insert([
+                'income_id'   => $income_id,
+                'year'        => $date->format('Y'),
+                'month'       => $date->format('m'),
+                'total'       => $total_income,
+                'ship_amount' => $request->load_amount,
+                'date_create' => now()
+            ]);
+
             DB::commit();
             return redirect()->route('data_pendapatan')->with('success', 'Data pendapatan berhasil disimpan.');
         } catch (\Exception $e) {
@@ -654,6 +663,7 @@ class HomeController extends Controller
             return redirect()->back()->with('error', 'Gagal menyimpan: ' . $e->getMessage());
         }
     }
+
 
 
     public function show_edit_pendapatan($id)
@@ -675,7 +685,6 @@ class HomeController extends Controller
     public function update_pendapatan(Request $request, $id)
     {
         
-        
         $request->validate([
             'shipname'          => 'required|string',
             'date'              => 'required|date',
@@ -685,7 +694,7 @@ class HomeController extends Controller
             'spending_name.*'   => 'required|string',
             'spending_amount.*' => 'required|integer|min:0',
         ]);
-
+        
         DB::beginTransaction();
         try {
             // Update kapal
@@ -746,10 +755,6 @@ class HomeController extends Controller
         return back()->with('success', 'Pengeluaran berhasil dihapus.');
     }
     
-    
-    
-
-
     public function delete_pendapatan($id)
     {
         DB::beginTransaction();
@@ -757,19 +762,24 @@ class HomeController extends Controller
             // 1. Hapus spendings terkait
             DB::table('spendings')->where('income_id', $id)->delete();
 
-            // 2. Ambil income terlebih dahulu untuk mendapatkan foreign key lainnya
+            // 2. Ambil income untuk cek keberadaan dan foreign key
             $income = DB::table('incomes')->where('income_id', $id)->first();
 
             if (!$income) {
                 return redirect()->route('data_pendapatan')->with('error', 'Data tidak ditemukan.');
             }
 
-            // 3. Hapus income
+            // 3. Hapus report yang terkait
+            DB::table('report')->where('income_id', $id)->delete();
+
+            // 4. Hapus income
             DB::table('incomes')->where('income_id', $id)->delete();
 
-            // 4. Hapus ship dan load yang terkait
-            DB::table('ships')->where('ship_id', $income->ship_id)->delete();
+            // 5. Hapus load (muatan) yang terkait
             DB::table('loads')->where('load_id', $income->load_id)->delete();
+
+            // ⚠️ Kapal tidak perlu dihapus agar tidak menghapus kapal yang digunakan income lain
+            // DB::table('ships')->where('ship_id', $income->ship_id)->delete();
 
             DB::commit();
             return redirect()->route('data_pendapatan')->with('success', 'Data pendapatan berhasil dihapus.');
@@ -779,11 +789,16 @@ class HomeController extends Controller
         }
     }
 
+
     public function kapal_aksi(Request $req)
     {
         $req->validate([
             'shipname' => 'required|string|max:255',
         ]);
+        // Cek duplikat kapal
+        if (\App\Models\Ship::where('shipname', $req->shipname)->exists()) {
+            return redirect('kategori')->with('error', 'Nama kapal sudah ada!');
+        }
         \App\Models\Ship::create([
             'shipname' => $req->shipname,
         ]);
@@ -813,6 +828,10 @@ class HomeController extends Controller
         $req->validate([
             'load_name' => 'required|string|max:255',
         ]);
+        // Cek duplikat jenis muatan
+        if (\App\Models\LoadsCategory::where('load_name', $req->load_name)->exists()) {
+            return redirect('kategori')->with('error', 'Jenis muatan sudah ada!');
+        }
         \App\Models\LoadsCategory::create([
             'load_name' => $req->load_name,
         ]);
@@ -845,6 +864,22 @@ class HomeController extends Controller
             'city_name' => $req->city_name,
         ]);
         return redirect('kategori')->with('success','Kota telah disimpan');
+    }
+
+    // Tambah: Fungsi aksi tambah rute
+    public function rute_aksi(Request $req)
+    {
+        $req->validate([
+            'city_name' => 'required|string|max:255',
+        ]);
+        // Cek duplikat rute
+        if (\App\Models\City::where('city_name', $req->city_name)->exists()) {
+            return redirect('kategori')->with('error', 'Nama rute sudah ada!');
+        }
+        \App\Models\City::create([
+            'city_name' => $req->city_name,
+        ]);
+        return redirect('kategori')->with('success','Rute telah disimpan');
     }
     public function rute_update($id, Request $req)
     {
