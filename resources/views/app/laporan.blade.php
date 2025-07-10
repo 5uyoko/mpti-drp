@@ -1,4 +1,4 @@
-@extends('app.master')
+  @extends('app.master')
 
 @section('konten')
 <div class="content-body">
@@ -85,6 +85,8 @@
             </tbody>
           </table>
         </div>
+        <a href="{{ route('laporan.pdf', request()->all()) }}" class="btn btn-success mb-3" target="_blank">Cetak PDF</a>
+        <div class="table-responsive mt-4">
       </div>
 
     </div>

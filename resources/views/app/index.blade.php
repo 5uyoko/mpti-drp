@@ -225,17 +225,38 @@
 
 
 <script>
-function formatRupiah(value) {
-  return value.toLocaleString('id-ID');
-}
+    // Data Bulanan
+    let dataBulan = [];
+    let dataBulanOut = [];
+    const bulanLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    @for($i=1; $i<=12; $i++)
+        dataBulan.push({{ $pemasukan_bulanan[$i] ?? 0 }});
+        dataBulanOut.push({{ $pengeluaran_bulanan[$i] ?? 0 }});
+    @endfor
 
+    // Data Tahunan
+    let tahunLabels = [];
+    let dataTahun = [];
+    let dataTahunOut = [];
+    @php
+        $tahun_awal = date('Y') - 4;
+        $tahun_akhir = date('Y');
+    @endphp
+    @for($t = $tahun_awal; $t <= $tahun_akhir; $t++)
+        tahunLabels.push('{{ $t }}');
+        dataTahun.push({{ $pemasukan_tahunan[$t] ?? 0 }});
+        dataTahunOut.push({{ $pengeluaran_tahunan[$t] ?? 0 }});
+    @endfor
 
+    // Fungsi format Rupiah
+    function formatRupiah(angka) {
+        return 'Rp. ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
 const ctx2 = document.getElementById('grafik2').getContext('2d');
-
-let dataBulan = [];
-let dataBulanOut = [];
-const bulanLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-
 const chart2 = new Chart(ctx2, {
   type: 'bar',
   data: {
@@ -267,7 +288,6 @@ const chart2 = new Chart(ctx2, {
       y: {
         title: { display: true, text: 'Nominal (Rp)' },
         min: 0,
-        max: 10000000,
         ticks: {
           callback: function(value) { return formatRupiah(value); }
         },
@@ -277,14 +297,7 @@ const chart2 = new Chart(ctx2, {
   }
 });
 
-
-
 const ctx3 = document.getElementById('grafik3').getContext('2d');
-
-let dataTahun = [];
-let dataTahunOut = [];
-const tahunLabels = ["2021", "2022", "2023", "2024", "2025"];
-
 const chart3 = new Chart(ctx3, {
   type: 'bar',
   data: {
@@ -316,7 +329,6 @@ const chart3 = new Chart(ctx3, {
       y: {
         title: { display: true, text: 'Nominal (Rp)' },
         min: 0,
-        max: 10000000,
         ticks: {
           callback: function(value) { return formatRupiah(value); }
         },

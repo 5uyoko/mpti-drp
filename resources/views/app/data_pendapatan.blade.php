@@ -1,6 +1,10 @@
 @extends('app.master')
 
 <style>
+    * {
+        box-sizing: border-box;
+    }
+
     .btn-primary,
     .btn-save,
     .btn-add {
@@ -10,6 +14,7 @@
         padding: 6px 14px;
         border-radius: 10px;
         font-size: 14px;
+        transition: background 0.2s;
     }
 
     .btn-primary:hover,
@@ -78,7 +83,12 @@
         border-radius: 14px;
         padding: 20px;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        border: 1px solid #333;
+        border: 1px solid #d1d5db;
+        transition: transform 0.2s;
+    }
+
+    .card-income:hover {
+        transform: translateY(-4px);
     }
 
     .card-income .info-row {
@@ -98,6 +108,13 @@
         display: flex;
         gap: 10px;
         margin-top: 10px;
+    }
+
+    .grid-income-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
     }
 
     @media (max-width: 768px) {
@@ -121,22 +138,11 @@
             flex-direction: column;
         }
     }
-
-    .btn-primary {
-        background: #2563eb !important;
-        color: #fff !important;
-        border: none;
-        padding: 6px 14px;
-        border-radius: 10px;
-        font-size: 14px;
-        transition: background 0.2s;
-    }
-
-    .btn-primary:hover {
-        background: #1d4ed8 !important;
-        color: #fff !important;
-    }
 </style>
+
+@php
+    $isAdmin = auth()->user()->role === 'admin';
+@endphp
 
 @section('konten')
 <div class="content-body">
@@ -146,7 +152,7 @@
             <input type="text" name="search" placeholder="Cari Nama Kapal" value="{{ request('search') }}">
             <select name="year">
                 <option value="">Tahun</option>
-                @for ($i = 2022; $i <= now()->year; $i++)
+                @for ($i = now()->year - 10; $i <= now()->year; $i++)
                     <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
                 @endfor
             </select>
@@ -164,24 +170,27 @@
     </div>
 
     <div class="container-fluid mt-4">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="grid-income-cards">
             @foreach ($pendapatan as $item)
-                <div class="col">
-                    <div class="card-income">
-                        <div class="info-row"><strong>Nama Kapal:</strong> {{ $item->nama_kapal ?? '-' }}</div>
-                        <div class="info-row"><strong>Rute:</strong> {{ $item->kota_asal}} - {{ $item->kota_tujuan }}</div>
-                        <div class="info-row"><strong>Jenis Muatan:</strong> {{ $item->jenis_muatan }}</div>
-                        <div class="info-row"><strong>Harga per Ton:</strong> Rp{{ number_format($item->harga_per_ton) }}</div>
-                        <div class="info-row"><strong>Jumlah Muatan:</strong> {{ $item->jumlah_muatan }} ton</div>
-                        <div class="info-row"><strong>Total Pendapatan:</strong> Rp{{ number_format($item->total_pendapatan) }}</div>
-                        <div class="action-buttons">
-                            <a href="{{ route('edit_pendapatan', $item->income_id) }}" class="btn btn-sm btn-edit">Edit</a>
-                            <form method="POST" action="{{ route('destroy_pendapatan', $item->income_id) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger btn-delete">Hapus</button>
-                            </form>
-                        </div>
+                <div class="card-income">
+                    <div class="info-row"><strong>Nama Kapal:</strong> {{ $item->nama_kapal ?? '-' }}</div>
+                    <div class="info-row"><strong>Rute:</strong> {{ $item->kota_asal}} - {{ $item->kota_tujuan }}</div>
+                    <div class="info-row"><strong>Jenis Muatan:</strong> {{ $item->jenis_muatan }}</div>
+                    <div class="info-row"><strong>Harga per Ton:</strong> Rp{{ number_format($item->harga_per_ton) }}</div>
+                    <div class="info-row"><strong>Jumlah Muatan:</strong> {{ $item->jumlah_muatan }} ton</div>
+                    <div class="info-row"><strong>Total Pendapatan:</strong> Rp{{ number_format($item->total_pendapatan) }}</div>
+                    
+                    <div class="action-buttons">
+                        <a href="{{ route('edit_pendapatan', $item->income_id) }}" class="btn btn-sm btn-edit">Edit</a>
+                        <form method="POST" action="{{ route('destroy_pendapatan', $item->income_id) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger btn-delete"
+                                    @if(!$isAdmin) disabled style="opacity: 0.5; pointer-events: none;" @endif>
+                                Hapus
+                            </button>
+                        </form>
                     </div>
                 </div>
             @endforeach

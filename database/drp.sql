@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 05, 2025 at 01:59 AM
+-- Generation Time: Jul 08, 2025 at 01:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,16 +29,27 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cities` (
   `city_id` int(11) NOT NULL,
-  `city_name` varchar(100) NOT NULL
+  `city_name` varchar(100) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `cities`
 --
 
-INSERT INTO `cities` (`city_id`, `city_name`) VALUES
-(1, 'Ohio'),
-(2, 'Niggerrrria');
+INSERT INTO `cities` (`city_id`, `city_name`, `updated_at`, `created_at`) VALUES
+(1, 'Banjarmasin', '2025-07-05 23:06:25', NULL),
+(2, 'Bontang', '2025-07-05 23:07:07', NULL),
+(5, 'Jakarta', '2025-07-05 02:05:14', '2025-07-05 02:05:14'),
+(7, 'Bima', '2025-07-05 23:05:56', '2025-07-05 02:55:44'),
+(8, 'Cirebon', '2025-07-05 23:07:22', '2025-07-05 23:07:22'),
+(9, 'Surabaya', '2025-07-05 23:07:33', '2025-07-05 23:07:33'),
+(10, 'Buton', '2025-07-05 23:07:47', '2025-07-05 23:07:47'),
+(11, 'Labuan Bajo', '2025-07-05 23:08:00', '2025-07-05 23:08:00'),
+(12, 'Larantuka', '2025-07-05 23:08:10', '2025-07-05 23:08:10'),
+(13, 'Ende', '2025-07-05 23:08:21', '2025-07-05 23:08:21'),
+(14, 'Maumere', '2025-07-05 23:08:40', '2025-07-05 23:08:40');
 
 -- --------------------------------------------------------
 
@@ -79,9 +90,10 @@ CREATE TABLE `incomes` (
 --
 
 INSERT INTO `incomes` (`income_id`, `ship_id`, `date`, `load_id`, `city_from_id`, `city_to_id`, `total_rental`, `total_spending`, `total_income`) VALUES
-(3, 4, '2025-06-24', 3, NULL, NULL, 2121212000, 0, 2121212000),
-(5, 7, '2025-03-03', 6, 1, 2, 1231230, 123123, 1108107),
-(6, 8, '2025-06-24', 7, 1, 2, 12880, 20000, -7120);
+(18, 11, '2025-07-06', 19, 1, 2, 2500000, 2000000, 500000),
+(21, 11, '2025-07-08', 22, 7, 7, 12075, 345, 11730),
+(22, 12, '2025-07-08', 23, 7, 11, 20060000, 230000, 19830000),
+(25, 11, '2025-07-08', 26, 7, 9, 54756, 234, 54522);
 
 -- --------------------------------------------------------
 
@@ -102,7 +114,9 @@ CREATE TABLE `kategori` (
 
 INSERT INTO `kategori` (`id`, `kategori`, `created_at`, `updated_at`) VALUES
 (1, 'Tidak Berkategori', '2023-03-21 10:07:29', '2023-03-21 10:07:29'),
-(2, 'xx', '2023-03-21 10:08:04', '2023-03-21 10:08:04');
+(2, 'xx', '2023-03-21 10:08:04', '2023-03-21 10:08:04'),
+(4, 'c', '2025-07-05 02:47:09', '2025-07-05 02:52:49'),
+(5, 'x', '2025-07-05 03:16:12', '2025-07-05 03:16:12');
 
 -- --------------------------------------------------------
 
@@ -122,9 +136,18 @@ CREATE TABLE `loads` (
 --
 
 INSERT INTO `loads` (`load_id`, `load_amount`, `rental_price`, `load_category_id`) VALUES
-(3, 1000, 2121212, 1),
 (6, 10, 123123, 1),
-(7, 10, 1288, 2);
+(7, 10, 1288, 2),
+(9, 123, 123123, 2),
+(10, 222, 222, 1),
+(11, 12, 12, 1),
+(12, 1, 1, 1),
+(14, 123, 123, 2),
+(18, 1000, 350000, 2),
+(19, 10, 250000, 1),
+(22, 345, 35, 2),
+(23, 59, 340000, 7),
+(26, 234, 234, 8);
 
 -- --------------------------------------------------------
 
@@ -134,16 +157,22 @@ INSERT INTO `loads` (`load_id`, `load_amount`, `rental_price`, `load_category_id
 
 CREATE TABLE `loads_category` (
   `load_category_id` int(11) NOT NULL,
-  `load_name` varchar(100) NOT NULL
+  `load_name` varchar(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `loads_category`
 --
 
-INSERT INTO `loads_category` (`load_category_id`, `load_name`) VALUES
-(1, 'Rafi\'s sacred cum'),
-(2, 'Syaikhu\'s disturbed cum');
+INSERT INTO `loads_category` (`load_category_id`, `load_name`, `created_at`, `updated_at`) VALUES
+(1, 'Jagung', NULL, '2025-07-05 23:03:59'),
+(2, 'Semen', NULL, '2025-07-05 23:04:10'),
+(7, 'Pupuk', '2025-07-05 23:04:21', '2025-07-05 23:04:21'),
+(8, 'Beras', '2025-07-05 23:04:38', '2025-07-05 23:04:38'),
+(9, 'Bawang,Garam,Sapi', '2025-07-05 23:05:14', '2025-07-05 23:05:14'),
+(10, 'Barang Pecahan', '2025-07-05 23:05:29', '2025-07-05 23:05:29');
 
 -- --------------------------------------------------------
 
@@ -224,12 +253,20 @@ CREATE TABLE `report` (
   `income_id` int(11) DEFAULT NULL,
   `year` int(11) DEFAULT NULL,
   `month` int(11) DEFAULT NULL,
-  `total_income_per_year` int(11) DEFAULT NULL,
-  `total_spending_per_year` int(11) DEFAULT NULL,
-  `total` int(11) DEFAULT NULL,
+  `total` int(11) NOT NULL,
   `ship_amount` int(11) DEFAULT NULL,
   `date_create` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `report`
+--
+
+INSERT INTO `report` (`report_id`, `income_id`, `year`, `month`, `total`, `ship_amount`, `date_create`) VALUES
+(8, 18, 2025, 7, 0, 10, '2025-07-06'),
+(9, 21, 2025, 7, 11730, 345, '2025-07-08'),
+(10, 22, 2025, 7, 19830000, 59, '2025-07-08'),
+(13, 25, 2025, 7, 54522, 234, '2025-07-08');
 
 -- --------------------------------------------------------
 
@@ -242,7 +279,7 @@ CREATE TABLE `ships` (
   `shipname` varchar(100) DEFAULT NULL,
   `capacity` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `update_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   `captain_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -250,11 +287,10 @@ CREATE TABLE `ships` (
 -- Dumping data for table `ships`
 --
 
-INSERT INTO `ships` (`ship_id`, `shipname`, `capacity`, `created_at`, `update_at`, `captain_id`) VALUES
-(1, 'KM NUSA', 10, '2025-06-28 10:51:39', '2025-06-28 10:51:39', 1),
-(4, 'Ihsan Kapal', 0, NULL, NULL, NULL),
-(7, 'AMBADEI', 0, NULL, NULL, NULL),
-(8, 'KM Jaya', 0, NULL, NULL, 1);
+INSERT INTO `ships` (`ship_id`, `shipname`, `capacity`, `created_at`, `updated_at`, `captain_id`) VALUES
+(11, 'KLM Moch Ihsan Ramadhani 02', NULL, '2025-07-05 01:51:49', '2025-07-05 23:03:06', NULL),
+(12, 'KLM Al-fatah', NULL, '2025-07-05 02:36:57', '2025-07-05 23:03:24', NULL),
+(17, 'KLM Moh Ihsan Ramadhani', NULL, '2025-07-05 02:55:17', '2025-07-05 23:02:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -274,8 +310,11 @@ CREATE TABLE `spendings` (
 --
 
 INSERT INTO `spendings` (`spending_id`, `income_id`, `spending_name`, `spending_amount`) VALUES
-(9, 5, '123123', 123123),
-(10, 6, 'Kandang Musang', 20000);
+(30, 18, 'Solar', 500000),
+(31, 18, 'Duar meledak', 1500000),
+(34, 21, 'sdf', 345),
+(35, 22, 'BBM', 230000),
+(38, 25, 'BBM', 234);
 
 -- --------------------------------------------------------
 
@@ -313,23 +352,23 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `level` enum('admin','bendahara','pengawas') NOT NULL,
   `foto` varchar(50) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
   `position` varchar(100) DEFAULT NULL,
-  `role` varchar(50) DEFAULT NULL
+  `role` enum('admin','captain') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `foto`, `remember_token`, `created_at`, `updated_at`, `username`, `position`, `role`) VALUES
-(1, 'aku atmin', 'admin@admin.com', NULL, '$2y$10$85cw2xAfSU.Pz67QYMLBfuObK6Wyc8k2PDqdziF5woBDdXE9qPmC6', 'admin', '1750515982_Labubu asli ngawi.jpeg', 'hlKTK9hZgHWmQqbKpRQGruvc3u33xEsgmrUE0toOIglOdh6pDWHrQRvyS5Qu', '2023-03-21 08:41:52', '2025-06-21 07:26:22', NULL, NULL, NULL),
-(2, 'Kaseem Puckett', 'xyzesaq@mailinator.com', NULL, '$2y$10$7kk1DYLwUV0WW89NiKx9T.zGS2DXc3h6m2qrupJJtHn1J5NyHB7Ya', 'bendahara', '', NULL, '2023-03-21 09:39:36', '2023-03-21 23:19:15', NULL, NULL, NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `foto`, `remember_token`, `created_at`, `updated_at`, `username`, `position`, `role`) VALUES
+(1, 'Rafi Mahrizky Yunanto Putra', 'admin@admin.com', NULL, '$2y$10$85cw2xAfSU.Pz67QYMLBfuObK6Wyc8k2PDqdziF5woBDdXE9qPmC6', '1751780969_We Heart It.jpeg', 'wbH67BlrymiNiKfv7q5XhfnTOXCBguLOuGpovfJkQJwlCDyr8ZXH6Hibov06', '2023-03-21 08:41:52', '2025-07-05 22:52:00', NULL, NULL, 'admin'),
+(4, 'kapten raka', 'raka@gmail.com', NULL, '$2y$10$nOnzyoYIzECxinPQBGTjfefnIAbGe0dfo72nme9tQ1Pid7C3g2R56', '', NULL, '2025-07-08 01:48:01', '2025-07-08 01:48:01', NULL, NULL, 'captain'),
+(5, 'Sehu', 'Sehu@ganteng.com', NULL, '$2y$10$2b3s.FMAZ7GSX1unOnjco.VcGHhg42DsTBvh0dMU.3KjiYy1Tfo4i', '1751964992_jawa.png', NULL, '2025-07-08 01:56:32', '2025-07-08 01:56:32', NULL, NULL, 'admin');
 
 -- --------------------------------------------------------
 
@@ -361,7 +400,8 @@ INSERT INTO `users_drp` (`user_id`, `username`, `password`, `name`, `position`, 
 -- Indexes for table `cities`
 --
 ALTER TABLE `cities`
-  ADD PRIMARY KEY (`city_id`);
+  ADD PRIMARY KEY (`city_id`),
+  ADD UNIQUE KEY `city_name` (`city_name`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -397,7 +437,8 @@ ALTER TABLE `loads`
 -- Indexes for table `loads_category`
 --
 ALTER TABLE `loads_category`
-  ADD PRIMARY KEY (`load_category_id`);
+  ADD PRIMARY KEY (`load_category_id`),
+  ADD UNIQUE KEY `load_name` (`load_name`);
 
 --
 -- Indexes for table `migrations`
@@ -437,6 +478,7 @@ ALTER TABLE `report`
 --
 ALTER TABLE `ships`
   ADD PRIMARY KEY (`ship_id`),
+  ADD UNIQUE KEY `shipname` (`shipname`),
   ADD KEY `captain_user_id_fk` (`captain_id`);
 
 --
@@ -473,7 +515,7 @@ ALTER TABLE `users_drp`
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -485,25 +527,25 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `incomes`
 --
 ALTER TABLE `incomes`
-  MODIFY `income_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `income_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `loads`
 --
 ALTER TABLE `loads`
-  MODIFY `load_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `load_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `loads_category`
 --
 ALTER TABLE `loads_category`
-  MODIFY `load_category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `load_category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -521,19 +563,19 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `report`
 --
 ALTER TABLE `report`
-  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `ships`
 --
 ALTER TABLE `ships`
-  MODIFY `ship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `ship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `spendings`
 --
 ALTER TABLE `spendings`
-  MODIFY `spending_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `spending_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `transaksi`
@@ -545,7 +587,7 @@ ALTER TABLE `transaksi`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users_drp`

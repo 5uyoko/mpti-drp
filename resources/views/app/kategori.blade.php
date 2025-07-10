@@ -2,6 +2,10 @@
 
 @section('konten')
 
+@php
+  $isAdmin = auth()->user()->role === 'admin';
+@endphp
+
 <div class="content-body">
 
   <div class="row page-titles mx-0 mt-2">
@@ -22,9 +26,15 @@
    
     <div class="card">
       <div class="card-header pt-4">
-        <button type="button" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;" data-toggle="modal" data-target="#modalTambahKapal">
-          <i class="fa fa-plus"></i> &nbsp TAMBAH KAPAL
+        <button type="button"
+          class="btn btn-primary float-right"
+          style="background-color:#007bff; border-color:#007bff; @if(!$isAdmin) opacity: 0.5; pointer-events: none; @endif"
+          data-toggle="modal"
+          data-target="#modalTambahKapal"
+          @if(!$isAdmin) disabled @endif>
+            <i class="fa fa-plus"></i> &nbsp TAMBAH KAPAL
         </button>
+
         <h4>Data Kapal</h4>
       </div>
       <div class="card-body pt-0">
@@ -71,11 +81,20 @@
                 <td>{{ $ship->shipname }}</td>
                 <td>
                   <div class="text-center">
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit_kapal_{{ $ship->ship_id }}">
-                      <i class="fa fa-cog"></i>
+                    <button type="button"
+                      class="btn btn-default btn-sm"
+                      data-toggle="modal"
+                      data-target="#edit_kapal_{{ $ship->ship_id }}"
+                      @if(!$isAdmin) disabled style="opacity: 0.5; pointer-events: none;" @endif>
+                        <i class="fa fa-cog"></i>
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapus_kapal_{{ $ship->ship_id }}">
-                      <i class="fa fa-trash"></i>
+
+                    <button type="button"
+                      class="btn btn-danger btn-sm"
+                      data-toggle="modal"
+                      data-target="#hapus_kapal_{{ $ship->ship_id }}"
+                      @if(!$isAdmin) disabled style="opacity: 0.5; pointer-events: none;" @endif>
+                        <i class="fa fa-trash"></i>
                     </button>
                   </div>
           
@@ -142,9 +161,17 @@
 
     <div class="card mt-4">
       <div class="card-header pt-4">
-        <button type="button" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;" data-toggle="modal" data-target="#modalTambahMuatan">
-          <i class="fa fa-plus"></i> &nbsp TAMBAH JENIS MUATAN
+
+
+        <button type="button"
+          class="btn btn-primary float-right"
+          style="background-color:#007bff; border-color:#007bff; @if(!$isAdmin) opacity:0.5; pointer-events:none; @endif"
+          data-toggle="modal"
+          data-target="#modalTambahMuatan"
+          @if(!$isAdmin) disabled @endif>
+            <i class="fa fa-plus"></i> &nbsp TAMBAH JENIS MUATAN
         </button>
+
         <h4>Data Jenis Muatan</h4>
       </div>
       <div class="card-body pt-0">
@@ -191,11 +218,20 @@
                 <td>{{ $muatan->load_name }}</td>
                 <td>
                   <div class="text-center">
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit_muatan_{{ $muatan->load_category_id }}">
-                      <i class="fa fa-cog"></i>
+                    <button type="button"
+                      class="btn btn-default btn-sm"
+                      data-toggle="modal"
+                      data-target="#edit_muatan_{{ $muatan->load_category_id }}"
+                      @if(!$isAdmin) disabled style="opacity: 0.5; pointer-events: none;" @endif>
+                        <i class="fa fa-cog"></i>
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapus_muatan_{{ $muatan->load_category_id }}">
-                      <i class="fa fa-trash"></i>
+
+                    <button type="button"
+                      class="btn btn-danger btn-sm"
+                      data-toggle="modal"
+                      data-target="#hapus_muatan_{{ $muatan->load_category_id }}"
+                      @if(!$isAdmin) disabled style="opacity: 0.5; pointer-events: none;" @endif>
+                        <i class="fa fa-trash"></i>
                     </button>
                   </div>
           
@@ -262,7 +298,12 @@
 
     <div class="card mt-4">
       <div class="card-header pt-4">
-        <button type="button" class="btn btn-primary float-right" style="background-color:#007bff; border-color:#007bff;" data-toggle="modal" data-target="#modalTambahRute">
+        <button type="button"
+          class="btn btn-primary float-right"
+          style="background-color:#007bff; border-color:#007bff; @if(!$isAdmin) opacity:0.5; pointer-events:none; @endif"
+          data-toggle="modal"
+          data-target="#modalTambahRute"
+          @if(!$isAdmin) disabled @endif>
           <i class="fa fa-plus"></i> &nbsp TAMBAH RUTE
         </button>
         <h4>Data Rute</h4>
@@ -311,11 +352,20 @@
                 <td>{{ $rute->city_name }}</td>
                 <td>
                   <div class="text-center">
-                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#edit_rute_{{ $rute->city_id }}">
-                      <i class="fa fa-cog"></i>
+                    <button type="button"
+                      class="btn btn-default btn-sm"
+                      data-toggle="modal"
+                      data-target="#edit_rute_{{ $rute->city_id }}"
+                      @if(!$isAdmin) disabled style="opacity: 0.5; pointer-events: none;" @endif>
+                        <i class="fa fa-cog"></i>
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#hapus_rute_{{ $rute->city_id }}">
-                      <i class="fa fa-trash"></i>
+
+                    <button type="button"
+                      class="btn btn-danger btn-sm"
+                      data-toggle="modal"
+                      data-target="#hapus_rute_{{ $rute->city_id }}"
+                      @if(!$isAdmin) disabled style="opacity: 0.5; pointer-events: none;" @endif>
+                        <i class="fa fa-trash"></i>
                     </button>
                   </div>
          

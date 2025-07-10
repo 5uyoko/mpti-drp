@@ -37,7 +37,7 @@
                 <th width="1%">NO</th>
                 <th>NAMA</th>
                 <th class="text-center">EMAIL</th>
-                <th class="text-center">LEVEL</th>
+                <th class="text-center">ROLE</th>
                 <th class="text-center" width="10%">OPSI</th>
               </tr>
             </thead>
@@ -61,7 +61,7 @@
                   @endif
                 </td>
                 <td class="text-center">{{ $u->email }}</td>
-                <td class="text-center">{{ $u->level }}</td>
+                <td class="text-center">{{ $u->role }}</td>
                 <td>    
 
                   <div class="text-center">

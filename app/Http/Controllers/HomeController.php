@@ -37,75 +37,95 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        $kategori = Kategori::all();
-        $transaksi = Transaksi::all();
-        $tanggal = date('Y-m-d');
-        $bulan = date('m');
-        $tahun = date('Y');
+    
+public function index()
+{
+    $kategori = Kategori::all();
+    $transaksi = Transaksi::all(); // opsional jika tidak digunakan, bisa dihapus
+    $tanggal = date('Y-m-d');
+    $bulan = date('m');
+    $tahun = date('Y');
 
-        $pemasukan_hari_ini = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pemasukan')
-        ->whereDate('tanggal',$tanggal)
-        ->first();
+    // Pemasukan
+    $pemasukan_hari_ini = DB::table('incomes')
+        ->whereDate('date', $tanggal)
+        ->sum('total_income');
 
-        $pemasukan_bulan_ini = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pemasukan')
-        ->whereMonth('tanggal',$bulan)
-        ->first();
+    $pemasukan_bulan_ini = DB::table('incomes')
+        ->whereMonth('date', $bulan)
+        ->sum('total_income');
 
-        $pemasukan_tahun_ini = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pemasukan')
-        ->whereYear('tanggal',$tahun)
-        ->first();
+    $pemasukan_tahun_ini = DB::table('incomes')
+        ->whereYear('date', $tahun)
+        ->sum('total_income');
 
-        $seluruh_pemasukan = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pemasukan')
-        ->first();
+    $seluruh_pemasukan = DB::table('incomes')
+        ->sum('total_income');
 
-        $pengeluaran_hari_ini = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pengeluaran')
-        ->whereDate('tanggal',$tanggal)
-        ->first();
+    // Pengeluaran
+    $pengeluaran_hari_ini = DB::table('incomes')
+        ->whereDate('date', $tanggal)
+        ->sum('total_spending');
 
-        $pengeluaran_bulan_ini = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pengeluaran')
-        ->whereMonth('tanggal',$bulan)
-        ->first();
+    $pengeluaran_bulan_ini = DB::table('incomes')
+        ->whereMonth('date', $bulan)
+        ->sum('total_spending');
 
-        $pengeluaran_tahun_ini = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pengeluaran')
-        ->whereYear('tanggal',$tahun)
-        ->first();
+    $pengeluaran_tahun_ini = DB::table('incomes')
+        ->whereYear('date', $tahun)
+        ->sum('total_spending');
 
-        $seluruh_pengeluaran = DB::table('transaksi')
-        ->select(DB::raw('SUM(nominal) as total'))
-        ->where('jenis','Pengeluaran')
-        ->first();
+    $seluruh_pengeluaran = DB::table('incomes')
+        ->sum('total_spending');
 
-        return view('app.index',
-            [
-                'pemasukan_hari_ini' => $pemasukan_hari_ini, 
-                'pemasukan_bulan_ini' => $pemasukan_bulan_ini,
-                'pemasukan_tahun_ini' => $pemasukan_tahun_ini,
-                'seluruh_pemasukan' => $seluruh_pemasukan,
-                'pengeluaran_hari_ini' => $pengeluaran_hari_ini, 
-                'pengeluaran_bulan_ini' => $pengeluaran_bulan_ini,
-                'pengeluaran_tahun_ini' => $pengeluaran_tahun_ini,
-                'seluruh_pengeluaran' => $seluruh_pengeluaran,
-                'kategori' => $kategori,
-                'transaksi' => $transaksi,
-            ]
-        );
-    }
+    // Data bulanan (tahun berjalan)
+    $pemasukan_bulanan = DB::table('incomes')
+        ->selectRaw('MONTH(date) as bulan, COALESCE(SUM(total_income),0) as total')
+        ->whereYear('date', $tahun)
+        ->groupBy(DB::raw('MONTH(date)'))
+        ->pluck('total', 'bulan')->toArray();
+
+    $pengeluaran_bulanan = DB::table('spendings')
+        ->join('incomes', 'spendings.income_id', '=', 'incomes.income_id')
+        ->selectRaw('MONTH(incomes.date) as bulan, COALESCE(SUM(spending_amount),0) as total')
+        ->whereYear('incomes.date', $tahun)
+        ->groupBy(DB::raw('MONTH(incomes.date)'))
+        ->pluck('total', 'bulan')->toArray();
+
+    // Data tahunan (5 tahun terakhir)
+    $tahun_awal = $tahun - 4;
+    $tahun_akhir = $tahun;
+    $pemasukan_tahunan = DB::table('incomes')
+        ->selectRaw('YEAR(date) as tahun, COALESCE(SUM(total_income),0) as total')
+        ->whereBetween(DB::raw('YEAR(date)'), [$tahun_awal, $tahun_akhir])
+        ->groupBy(DB::raw('YEAR(date)'))
+        ->pluck('total', 'tahun')->toArray();
+
+    $pengeluaran_tahunan = DB::table('spendings')
+        ->join('incomes', 'spendings.income_id', '=', 'incomes.income_id')
+        ->selectRaw('YEAR(incomes.date) as tahun, COALESCE(SUM(spending_amount),0) as total')
+        ->whereBetween(DB::raw('YEAR(incomes.date)'), [$tahun_awal, $tahun_akhir])
+        ->groupBy(DB::raw('YEAR(incomes.date)'))
+        ->pluck('total', 'tahun')->toArray();
+
+    return view('app.index', [
+        'pemasukan_hari_ini' => (object)['total' => $pemasukan_hari_ini], 
+        'pemasukan_bulan_ini' => (object)['total' => $pemasukan_bulan_ini],
+        'pemasukan_tahun_ini' => (object)['total' => $pemasukan_tahun_ini],
+        'seluruh_pemasukan' => (object)['total' => $seluruh_pemasukan],
+        'pengeluaran_hari_ini' => (object)['total' => $pengeluaran_hari_ini], 
+        'pengeluaran_bulan_ini' => (object)['total' => $pengeluaran_bulan_ini],
+        'pengeluaran_tahun_ini' => (object)['total' => $pengeluaran_tahun_ini],
+        'seluruh_pengeluaran' => (object)['total' => $seluruh_pengeluaran],
+        'kategori' => $kategori,
+        'transaksi' => $transaksi,
+        'pemasukan_bulanan' => $pemasukan_bulanan,
+        'pengeluaran_bulanan' => $pengeluaran_bulanan,
+        'pemasukan_tahunan' => $pemasukan_tahunan,
+        'pengeluaran_tahunan' => $pengeluaran_tahunan,
+    ]);
+}
+
 
     public function kategori()
     {
@@ -414,27 +434,36 @@ class HomeController extends Controller
     //     return Excel::download(new LaporanExport, 'Laporan.xlsx');
     // }
 
-    public function laporan_pdf()
-    {
-        if(isset($_GET['kategori'])){
-            $kategori = Kategori::orderBy('kategori','asc')->get();
-            if($_GET['kategori'] == ""){
-                $transaksi = Transaksi::whereDate('tanggal','>=',$_GET['dari'])
-                ->whereDate('tanggal','<=',$_GET['sampai'])
-                ->get();
-            }else{
-                $transaksi = Transaksi::where('kategori_id',$_GET['kategori'])
-                ->whereDate('tanggal','>=',$_GET['dari'])
-                ->whereDate('tanggal','<=',$_GET['sampai'])
-                ->get();
-            }
-            // $transaksi = Transaksi::orderBy('id','desc')->get();
-            // return view('app.laporan_print',['transaksi' => $transaksi, 'kategori' => $kategori]);
-            $pdf = PDF::loadView('app.laporan_pdf', ['transaksi' => $transaksi, 'kategori' => $kategori]);
-            return $pdf->download('Laporan Keuangan.pdf');
-        }
-        
-    }
+public function laporan_pdf(Request $request)
+{
+    // Ambil filter dari request
+    $filters = [
+        'year' => $request->year,
+        'month' => $request->month,
+        'shipname' => $request->shipname,
+        'load_name' => $request->load_name,
+    ];
+
+    // Query laporan, samakan dengan yang di laporan.blade.php
+    $laporan = DB::table('report')
+        ->leftJoin('users', 'report.user_id', '=', 'users.id')
+        ->leftJoin('ships', 'report.ship_id', '=', 'ships.ship_id')
+        ->leftJoin('loads_category', 'report.load_category_id', '=', 'loads_category.load_category_id')
+        ->select(
+            'report.*',
+            'users.name',
+            'ships.shipname',
+            'loads_category.load_name'
+        )
+        ->when($filters['year'], fn($q) => $q->where('report.year', $filters['year']))
+        ->when($filters['month'], fn($q) => $q->where('report.month', $filters['month']))
+        ->when($filters['shipname'], fn($q) => $q->where('ships.shipname', 'like', '%'.$filters['shipname'].'%'))
+        ->when($filters['load_name'], fn($q) => $q->where('loads_category.load_name', 'like', '%'.$filters['load_name'].'%'))
+        ->get();
+
+    $pdf = PDF::loadView('app.laporan_pdf', compact('laporan', 'filters'));
+    return $pdf->download('laporan-keuangan.pdf');
+}
 
 
     public function user()
@@ -450,6 +479,7 @@ class HomeController extends Controller
 
     public function user_aksi(Request $request)
     {
+        
         $this->validate($request, [
             'nama' => 'required',
             'email' => 'required|email',
@@ -457,6 +487,8 @@ class HomeController extends Controller
             'level' => 'required',
             'foto' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        
 
         // menyimpan data file yang diupload ke variabel $file
         $file = $request->file('foto');
@@ -474,13 +506,14 @@ class HomeController extends Controller
         }
  
  
-        User::create([
-            'name' => $request->nama,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'level' => $request->level,
-            'foto' => $nama_file
-        ]);
+        $user = new \App\Models\User();
+        $user->name = $request->nama;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->role = $request->level;
+        $user->foto = $nama_file;
+        $user->save();
+
 
         return redirect(route('user'))->with('success','User telah disimpan');
     }
@@ -503,7 +536,7 @@ class HomeController extends Controller
         $name = $req->input('nama');
         $email = $req->input('email');
         $password = $req->input('password');
-        $level = $req->input('level');
+        $role = $req->input('level');
         
 
         $user = User::find($id);
@@ -530,7 +563,7 @@ class HomeController extends Controller
 
             $user->foto = $nama_file;
         }
-        $user->level = $level;
+        $user->role = $role;
         $user->save();
 
         return redirect(route('user'))->with("success","User telah diupdate!");

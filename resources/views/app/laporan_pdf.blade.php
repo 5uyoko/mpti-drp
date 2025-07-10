@@ -2,125 +2,74 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Laporan Keuangan</title>
+  <style>
+    body { font-size: 11pt; }
+    table { width: 100%; border-collapse: collapse; font-size: 11pt; }
+    th, td { border: 1px solid #333; padding: 6px; text-align: left; }
+    th { background: #eee; }
+    .text-center { text-align: center; }
+  </style>
 </head>
 <body>
-
-  <style type="text/css">
-    body{
-      font-size: 11pt;
-    }
-    .table, .table th, .table td {
-      border: 1px solid;
-    }
-
-    .table {
-      border-collapse: collapse;
-    }
-  </style>
   <center>
     <h4>LAPORAN KEUANGAN PT. RAMADHANI PERMAI SHIPPING</h4>
   </center>
 
-  <table style="width: 50%">
+  <table style="width: 60%; margin-bottom:20px">
     <tr>
-      <td width="40%">DARI TANGGAL</td>
+      <td width="40%">Tahun</td>
       <td width="5%" class="text-center">:</td>
-      <td>{{ date('d-m-Y',strtotime($_GET['dari'])) }}</td>
+      <td>{{ $filters['year'] ?? '-' }}</td>
     </tr>
     <tr>
-      <td width="40%">SAMPAI TANGGAL</td>
-      <td width="5%" class="text-center">:</td>
-      <td>{{ date('d-m-Y',strtotime($_GET['sampai'])) }}</td>
+      <td>Bulan</td>
+      <td class="text-center">:</td>
+      <td>{{ $filters['month'] ?? '-' }}</td>
     </tr>
     <tr>
-      <td width="40%">KATEGORI</td>
-      <td width="5%" class="text-center">:</td>
-      <td>
-        @php
-        $id_kategori = $_GET['kategori'];
-        @endphp
-
-        @if($id_kategori == "")
-        @php
-        $kat = "SEMUA KATEGORI";
-        @endphp
-        @else
-        @php
-        $katt = DB::table('kategori')->where('id',$id_kategori)->first();
-        $kat = $katt->kategori
-        @endphp
-        @endif
-
-        {{$kat}}
-      </td>
+      <td>Nama Kapal</td>
+      <td class="text-center">:</td>
+      <td>{{ $filters['shipname'] ?? '-' }}</td>
+    </tr>
+    <tr>
+      <td>Jenis Muatan</td>
+      <td class="text-center">:</td>
+      <td>{{ $filters['load_name'] ?? '-' }}</td>
     </tr>
   </table>
 
-  <br>
-
-  <table class="table" width="100%">
+  <table>
     <thead>
       <tr>
-        <th rowspan="2" class="text-center" width="1%">NO</th>
-        <th rowspan="2" class="text-center" width="9%">TANGGAL</th>
-        <th rowspan="2" class="text-center">KATEGORI</th>
-        <th rowspan="2" class="text-center">KETERANGAN</th>
-        <th colspan="2" class="text-center">JENIS</th>
-      </tr>
-      <tr>
-        <th class="text-center">PEMASUKAN</th>
-        <th class="text-center">PENGELUARAN</th>
+        <th class="text-center">ID Laporan</th>
+        <th class="text-center">Kapten</th>
+        <th class="text-center">Kapal</th>
+        <th class="text-center">Jenis Muatan</th>
+        <th class="text-center">Tahun</th>
+        <th class="text-center">Bulan</th>
+        <th class="text-center">Total Pemasukan</th>
+        <th class="text-center">Total Pengeluaran</th>
       </tr>
     </thead>
     <tbody>
-      @php
-      $no = 1;
-      $saldo = 0;
-      $total_pemasukan = 0;
-      $total_pengeluaran = 0;
-      @endphp
-      @foreach($transaksi as $t)
-      <?php 
-        if($t->jenis == "Pemasukan"){
-          $saldo += $t->nominal;
-        }else{
-          $saldo -= $t->nominal;
-        }
-      ?>
+      @forelse($laporan as $item)
       <tr>
-        <td class="text-center">{{ $no++ }}</td>
-        <td class="text-center">{{ date('d-m-Y', strtotime($t->tanggal )) }}</td>
-        <td>{{ $t->kategori->kategori }}</td>
-        <td>{{ $t->keterangan }}</td>
-        <td class="text-center">
-          @if($t->jenis == "Pemasukan")
-          {{ "Rp.".number_format($t->nominal).",-" }}
-          @php $total_pemasukan += $t->nominal; @endphp
-          @else
-          {{ "-" }}
-          @endif
-        </td>
-        <td class="text-center">
-          @if($t->jenis == "Pengeluaran")
-          {{ "Rp.".number_format($t->nominal).",-" }}
-          @php $total_pengeluaran += $t->nominal; @endphp
-          @else
-          {{ "-" }}
-          @endif
-        </td>
+        <td class="text-center">{{ $item->report_id }}</td>
+        <td>{{ $item->name }}</td>
+        <td>{{ $item->shipname }}</td>
+        <td>{{ $item->load_name }}</td>
+        <td class="text-center">{{ $item->year }}</td>
+        <td class="text-center">{{ $item->month }}</td>
+        <td class="text-center">Rp {{ number_format($item->total_income, 0, ',', '.') }}</td>
+        <td class="text-center">Rp {{ number_format($item->total_spending, 0, ',', '.') }}</td>
       </tr>
-      @endforeach
+      @empty
+      <tr>
+        <td colspan="8" class="text-center">Data tidak ditemukan.</td>
+      </tr>
+      @endforelse
     </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="4" class="text-bold text-right">TOTAL</td>
-        <td class="text-center">{{ "Rp.".number_format($total_pemasukan).",-" }}</td>
-        <td class="text-center">{{ "Rp.".number_format($total_pengeluaran).",-" }}</td>
-      </tr>
-    </tfoot>
   </table>
-
 </body>
 </html>

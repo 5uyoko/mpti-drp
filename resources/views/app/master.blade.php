@@ -108,7 +108,7 @@
                @endif
                 <div class="media-body">
                     <h5 class="mb-0">{{ Auth::user()->name }}</h5>
-                    <p class="text-muted mb-0"><?php if(Auth::user()->level == "admin"){ echo "Administrator";}else if(Auth::user()->level == "captain"){ echo "Captain"; }else{ echo "Pengawas"; } ?></p>
+                    <p class="text-muted mb-0"><?php if(Auth::user()->role == "admin"){ echo "Administrator";}else if(Auth::user()->role == "captain"){ echo "Captain"; }else{ echo "Pengawas"; } ?></p>
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
                     </a>
                 </li>
 
-                @if(Auth::user()->level == "admin")
+                @if(Auth::user()->role == "admin" or Auth::user()->role == "captain")
                 <li>
                     <a href="{{ route('kategori') }}" aria-expanded="false">
                         <i class="icon-grid menu-icon mr-3"></i><span class="nav-text">Data Kategori</span>
@@ -133,7 +133,7 @@
                 </li>
                 @endif
 
-                @if(Auth::user()->level == "admin")
+                @if(Auth::user()->role == "admin" or Auth::user()->role == "captain")
                 <li>
                     <a href="{{ route('data_pendapatan') }}" aria-expanded="false">
                         <i class="icon-grid menu-icon mr-3"></i><span class="nav-text">Data Pendapatan</span>
@@ -149,7 +149,7 @@
                     </a>
                 </li>
 
-                @if(Auth::user()->level == "admin")
+                @if(Auth::user()->role == "admin")
 
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
